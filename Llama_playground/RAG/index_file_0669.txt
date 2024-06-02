@@ -1,0 +1,3 @@
+What was the issue with Palestinian Instagram users' profile bios and how was it resolved?
+
+At 2023-oct-20, meta inserted the word "terrorist" into the profile bios of some Palestinian Instagram users due to a bug in auto-translation. The issue affected users with the word "Palestinian" written in English on their profile, the Palestinian flag emoji, and the word "alhamdulillah" written in Arabic. The auto-translation now reads "Thank God" after being resolved.

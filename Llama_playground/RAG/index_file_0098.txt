@@ -1,0 +1,3 @@
+What is the controversy surrounding the use of AI by the Israeli Defense Forces (IDF)?
+
+At 2024-apr-11, a video has surfaced of a senior official at Israel's cyber intelligence agency, Unit 8200, discussing the use of machine learning "magic powder" to help identify Hamas targets in Gaza, raising questions about the accuracy of the IDF's recent statement that it does not use an artificial intelligence system that identifies terrorist operatives or tries to predict whether a person is a terrorist. The video also bears similarities with recent testimony from six IDF insiders about their use of an AI tool called "Lavender" during its offensive on Hamas, which the IDF denies using to choose targets for attack.

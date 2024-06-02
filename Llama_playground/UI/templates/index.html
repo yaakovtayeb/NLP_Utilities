@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Customer Service Chat</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+		  max-width: 80%;
+		  width: 80%;
+		  margin: 0 auto;
+		  padding: 20px;
+		  background-color: #fff;
+		  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		  border-radius: 5px;
+		  position: fixed; /* Change from absolute to fixed */
+		  bottom: 100px; /* Align to bottom of screen */
+		  left: 50%;
+		  transform: translateX(-50%);
+		  height: calc(80% - 130px); /* Updated height */
+		  height: calc(100vh - 130px - 70px);
+		  overflow-y: auto;
+		}
+
+		.message-container {
+		  height: 100%;
+		  display: flex;
+		  flex-direction: column-reverse;
+		  flex-shrink: 0;
+		}
+
+		.message {
+		  display: block;
+		  background-color: #97bbe0;
+		  padding: 10px;
+		  margin: 10px 0;
+		  border-radius: 5px;
+		  box-sizing: border-box; /* Added */
+		}
+
+		.message:last-child {
+		  margin-bottom: 0;
+		}
+
+		ul {
+		  margin: 0;
+		  padding: 10px 0; /* Updated */
+		  list-style: none;
+		  height: calc(100% - 50px); /* Updated */
+		}
+
+		#message-div {
+		  height: calc(80% - 50px); /* Updated height */
+		  height: calc(100vh - 190px - 70px); /* Updated height */
+		  display: flex;
+		  flex-direction: column-reverse;
+		  margin: 0;
+		  padding: 0;
+		  max-height: 300px;
+		  border: 1px solid #ccc;
+		  border-radius: 5px;
+		  padding: 10px;
+		  padding-bottom: 100px;
+		  overflow-y: visible;
+		  scroll-behavior: smooth;
+		}
+
+		.header {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.header h1 {
+			margin: 0;
+			font-size: 36px;
+		}
+
+		.form {
+			position: fixed;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #fff;
+			border-top: 1px solid #ccc;
+			padding: 10px;
+			width: 80%;
+			max-width: 80%;
+			display: flex;
+		}
+
+		.form textarea {
+			flex-grow: 1;
+			min-height: 20px;
+			padding: 10px;
+			border-radius: 5px;
+			border: none;
+			resize: none;
+		}
+
+		.form button {
+			padding: 10px 20px;
+			background-color: #0084ff;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.form button:hover {
+			background-color: #004682;
+		}
+
+	</style>
+</head>
+<body>
+<div class="container">
+	<div class="header">
+		<h1>🦙 Llama Tuned 🦙</h1>
+	</div>
+
+		<ul class="message-list" id="message-list">
+			<!-- Messages will be added dynamically here -->
+		</ul>
+
+</div>
+
+<form class="form" id="message-form">
+	<textarea class="new-message" id="new-message" placeholder="Write a message"></textarea>
+	<button class="send-button" id="send-button">Send</button>
+</form>
+
+<script>
+	// Render new message
+	function renderMessage(message) {
+		const list = document.getElementById('message-list');
+		const listItem = document.createElement('li');
+		listItem.classList.add('message');
+		listItem.textContent = message;
+		list.appendChild(listItem);
+
+		// Scroll to bottom of list
+		list.scrollTop = list.scrollHeight;
+	}
+
+	function handleFormSubmit(event) {
+        event.preventDefault();
+        const input = document.getElementById('new-message');
+        const message = input.value.trim();
+        if (message !== '') {
+            input.value = '';
+            renderMessage(message);
+            input.focus();
+        }
+
+        const list = document.getElementById('message-list');
+        const messages = Array.from(list.children).map((li) => li.textContent.trim());
+
+        fetch('/process', {
+            method: 'POST',
+            body: JSON.stringify({
+                'messages': messages,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const processedMessages = data['processed_messages'];
+            const list = document.getElementById('message-list');
+            list.innerHTML = '';
+            for (const message of processedMessages) {
+                renderMessage(message);
+            }
+        });
+    }
+
+	// Handle shift + enter keypress
+	function handleShiftEnter(event) {
+		if (event.keyCode === 13 && event.shiftKey) {
+			event.preventDefault();
+			handleFormSubmit(event);
+		}
+	}
+
+	// Add submit event listener to form
+	const form = document.getElementById('message-form');
+	form.addEventListener('submit', handleFormSubmit);
+
+	// Add keydown event listener to input
+	const input = document.getElementById('new-message');
+	input.addEventListener('keydown', handleShiftEnter);
+</script>
+</body>
+</html>
